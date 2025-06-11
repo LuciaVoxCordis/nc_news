@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css">
+    <title>NC news API</title>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>NC News API</h1>
+      </header>
+      <section>
+      <h2>Available endpoints:</h2>
+        <ul>
+          <nav>
+          <li><a href="#articles">/api/articles</a></li>
+          <ul>
+            <li><a href="#articlessort_by">/articles?sort_by=</a></li>
+            <li><a href="#articlesorder">/articles?order=</a></li>
+            <li><a href="#articlesuserid">/articles:user_id</a></li>
+          </ul>
+          <li><a href="#comments">/api/comments</a></li>
+          <ul>
+            <li><a href="#commentscommentid">
+              /comments:comment_id
+            </a></li>
+          </ul>
+          <li><a href="#topics">/api/topics</a></li>
+          <ul> 
+            <li><a href="#topics">/topics</a></li>
+          </ul>
+          <li><a href="#users">/api/users</a></li>
+          <ul>
+            <li><a href="#users">/users</a></li>
+          </ul>
+        </nav>
+        </ul>
+      </section>
+      <section>
+      <h2>Endpoint explaination and usage:</h2>
+        <h3 id="articles">api/articles</h3>
+        <p>Serves articles as either individually or as a list.</p>
+        <h4>api/articles</h4>
+        <p>presents a list of all articles in decending date order</p>
+        <p>Example URL: api/articles</p>
+        <p>Example return object:</p>
+        <pre> {
+          "articles": [
+            {
+              "title": "Seafood substitutions are increasing",
+              "topic": "cooking",
+              "author": "weegembump",
+              "created_at": "2018-05-30T15:59:13.341Z",
+              "votes": 0,
+              "comment_count": 6
+            },
+            
+          ]
+        } </pre>
+      <h4 id="articlessort_by">api/articles?sort_by=</h4>
+        <p>Example URL: api/articles?sort_by_user_id</p>
+        <p>
+          sorts the articles by a specified category, available categories are:
+        </p>
+        <ul>
+          <li>article_id</li>
+          <li>votes</li>
+          <li>comment count</li>
+          <li>created at</li>
+        </ul>
+        <p>Example return object:</p>
+        <pre> {
+          "articles": [
+            {
+              "title": "Seafood substitutions are increasing",
+              "topic": "cooking",
+              "author": "weegembump",
+              "created_at": "2018-05-30T15:59:13.341Z",
+              "votes": 0,
+              "comment_count": 6
+            },
+            
+          ]
+        } </pre>
+        <h4 id="articlesorder">api/articles?order=</h4>
+        <p>Example URL: api/articles?order=asc</p>
+        <p>
+          dictates whether the articles list should be sorted in ascending or
+          descending order. options are:
+        </p>
+        <ul>
+          <li>asc</li>
+          <li>desc</li>
+        </ul>
+        <p>Example return object:</p>
+        <pre> {
+          "articles": [
+            {
+              "title": "Seafood substitutions are increasing",
+              "topic": "cooking",
+              "author": "weegembump",
+              "created_at": "2018-05-30T15:59:13.341Z",
+              "votes": 0,
+              "comment_count": 6
+            },
+            
+          ]
+        } </pre>
+      <h4 id="articlesuserid">api/articles:user_id</h4>
+        <p>Example URL: api/articles/3</p>
+        <p>
+          serves a singular article based on the user_id provided. Will return
+          an error if that article does not exist, or the provided user_id is in
+          the incorrect format
+        </p>
+        <p>Example return object:</p>
+        <pre> 
+            {
+              "title": "Seafood substitutions are increasing",
+              "topic": "cooking",
+              "author": "weegembump",
+              "created_at": "2018-05-30T15:59:13.341Z",
+              "votes": 0,
+              "comment_count": 6
+            }
+        </pre>
+        <h5>Aditional request types:</h5>
+        <h6>PATCH</h6>
+        <p>
+          A patch request can be made to this endpoint in order to increase or
+          decrease the amount of votes this article has. for example +1 or
+          -1.The body of the patch request must have an inc_votes with either a
+          positive or negative value.
+        </p>
+        <p>Example: inc_votes : +3</p>
+        <pre>        {
+          "title": "Seafood substitutions are increasing",
+          "topic": "cooking",
+          "author": "weegembump",
+          "created_at": "2018-05-30T15:59:13.341Z",
+          "votes": 0,
+          "comment_count": 9
+        }
+      </pre>
+      <h4>api/articles:user_id/comments</h4>
+        <p>Example URL: api/articles/3/comments</p>
+        <p>
+          serves list of every comment ascociated with the given article_id.
+          returns an error if no user exists with the given ID, returns an empty
+          list if there are no comments ascociated with the given ID.
+        </p>
+        <pre>
+          {"comments":
+          [
+            {
+              article_id: 4,
+              body: "The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.",
+              votes: 14,
+              author: "butter_bridge",
+              created_at: 1604113380000,
+            },
+            ]
+          }
+        </pre>
+        <h5>Aditional request types:</h5>
+        <h6>POST</h6>
+        <p>
+          A post request can be made to this endpoint to post a new comment ascocieated with the given article. The body of the post request must have:
+          <ul>
+            <li> A body in the form of a string </li>
+             <li>An author in the form of a string that matches a username belonging to a user entry within the users db</li>
+          </ul>
+        </p>
+        <pre>
+            {
+              article_id: 4,
+              body: "The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.",
+              votes: 14,
+              author: "butter_bridge",
+              created_at: 1604113380000,
+            }
+        </pre>
+      <h3 id="comments">/api/comments</h3>
+        <p>Can be used to delete a specified comment from the comments table within the database. does not respons with anything.</p>
+      <h4 id="commentscommentid">/api/comments:comment_id</h4>
+        <p>Example URL: api/comments/3</p>
+        <h5>DELETE</h5>
+        <p>A Delete request can be made to this endpoint n order to delete a comment with the specified comment_id. Will return an error if the comment ID is not a number, or if the comment_id cannot be found within the DB. Does not return anything</p>
+      <h3 id="topics"> /api/topics</h3> 
+      <p>Serves a list of topics held within the topics table of the Database</p>
+      <h4>/api/topics</h4>
+      <p>Example URL: /api/topics</p>
+      <p> returns a list containing every topic held within the topics table of the database</p>
+      <pre>{
+         "topics":[{
+         description: 'Not dogs',
+    slug: 'cats',
+    img_url: ""
+         },]
+      }
+      </pre>
+      <h3> /api/users</h3>
+      <p> serves a list of users held within the users table of the database</p>
+      <h4 id="users">/api/users</h4>
+      <p>Example URL: /api/users</p>
+      <p> returns a list containing every user held within the users table of the database</p>
+      <pre>{
+        "topics":[{
+          username: "butter_bridge",
+          name: "jonny",
+          avatar_url:
+            "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg",
+        },]
+     }
+    </section>
+    </main>
+  </body>
+</html>

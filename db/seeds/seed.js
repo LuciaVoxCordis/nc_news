@@ -19,10 +19,10 @@ const seed = async ({ topicData, userData, articleData, commentData }) => {
     "CREATE TABLE users (username VARCHAR(40) PRIMARY KEY, name VARCHAR(40), avatar_url VARCHAR(1000))"
   );
   await db.query(
-    "CREATE TABLE articles (article_id SERIAL PRIMARY KEY, title VARCHAR(100), topic VARCHAR(100) REFERENCES topics(slug), author VARCHAR(100) REFERENCES users(username), body TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, votes INT DEFAULT 0, article_img_url VARCHAR(1000))"
+    "CREATE TABLE articles (article_id SERIAL PRIMARY KEY, title VARCHAR(100), topic VARCHAR(100) REFERENCES topics(slug) ON DELETE CASCADE NOT NULL, author VARCHAR(100) REFERENCES users(username) ON DELETE CASCADE NOT NULL, body TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, votes INT DEFAULT 0, article_img_url VARCHAR(1000))"
   );
   await db.query(
-    "CREATE TABLE comments (comment_id SERIAL PRIMARY KEY, article_id INT REFERENCES articles(article_id), body TEXT, votes INT DEFAULT 0, author VARCHAR(40) REFERENCES users(username), created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)"
+    "CREATE TABLE comments (comment_id SERIAL PRIMARY KEY, article_id INT REFERENCES articles(article_id) ON DELETE CASCADE NOT NULL, body TEXT, votes INT DEFAULT 0, author VARCHAR(40) REFERENCES users(username) ON DELETE CASCADE NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)"
   );
 
   const formattedTopicData = topicData.map((topic) => {
@@ -56,14 +56,12 @@ const seed = async ({ topicData, userData, articleData, commentData }) => {
     )
   );
 
-  const refObj = await createRefObj("articles", "title", "article_id");
-  const commentDataUpdatedID = await convertToID(
-    refObj,
+  const commentDataUpdatedID = convertToID(
+    await createRefObj("articles", "title", "article_id"),
     commentData,
-    "article_title",
-    "title"
+    "article_title"
   );
-  const formattedCommentsData = commentDataUpdatedID.map((comment) => {
+  const formattedCommentsData = await commentDataUpdatedID.map((comment) => {
     const withConvertedTimestamp = convertTimestampToDate(comment);
     return Object.values(withConvertedTimestamp);
   });
@@ -74,4 +72,5 @@ const seed = async ({ topicData, userData, articleData, commentData }) => {
     )
   );
 };
+
 module.exports = seed;

@@ -1,6 +1,8 @@
-const {
-  convertTimestampToDate
-} = require("../db/seeds/utils");
+const { convertTimestampToDate } = require("../db/seeds/utils");
+const requestExists = require("../models/models-utils");
+const seed = require("../db/seeds/seed");
+const data = require("../db/data/test-data/index");
+const db = require("../db/connection");
 
 describe("convertTimestampToDate", () => {
   test("returns a new object", () => {
@@ -38,3 +40,13 @@ describe("convertTimestampToDate", () => {
   });
 });
 
+describe("requestExists", () => {
+  test("should return true or false depending on if item given exists within the database on the specified table", async () => {
+    await seed(data);
+    const resultOne = await requestExists("articles", "article_id", 3);
+    const resultTwo = await requestExists("articles", "article_id", 9999);
+    expect(resultOne).toBe(true);
+    expect(resultTwo).toBe(false);
+    await db.end();
+  });
+});

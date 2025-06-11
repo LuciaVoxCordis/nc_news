@@ -14,10 +14,11 @@ async function createRefObj(dbToQuery, key, value) {
   return refObj;
 }
 
-async function convertToID(refObj, dataArr, key) {
-  const newDataArr = await dataArr.map((obj) => {
-    obj[key] = refObj[obj[key]];
-    return obj;
+function convertToID(refObj, dataArr, key) {
+  const newDataArr = dataArr.map((obj) => {
+    const objCopy = { ...obj };
+    objCopy[key] = refObj[obj[key]];
+    return objCopy;
   });
   return newDataArr;
 }
