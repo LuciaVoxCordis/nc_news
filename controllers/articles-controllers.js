@@ -5,11 +5,18 @@ const {
   requestPostComment,
   requestPatchArticleVotes,
 } = require("../models/articles-models");
+const { extractQueries } = require("./controllers-utils");
 
 const getAllArticles = async (req, res) => {
-  const { sort_by, order } = req.query;
-  const { rows } = await requestAllArticles(sort_by, order);
-  res.status(200).send({ articles: rows });
+  if (Object.keys(req.query).length) {
+    const { query } = req.query;
+    const { sort_by, order } = extractQueries("sort_by", "order", query);
+    const { rows } = await requestAllArticles(sort_by, order);
+    res.status(200).send({ articles: rows });
+  } else {
+    const { rows } = await requestAllArticles();
+    res.status(200).send({ articles: rows });
+  }
 };
 
 const getArticleById = async (req, res, next) => {

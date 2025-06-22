@@ -36,7 +36,7 @@ describe("/api/topics", () => {
 //~~~~~~~~~~~~~~~~~~~~ARTICLES TESTS~~~~~~~~~~~~~~~~~~~~
 
 describe("/api/articles", () => {
-  test("GET 200: Responds with an object with a key of 'articles' with value of an array containing objects representing each article held within the articles table. objects sheould be in descending date order by default", async () => {
+  test("GET 200: Responds with an object with a key of 'articles' with value of an array containing objects representing each article held within the articles table. objects should be in descending date order by default", async () => {
     const { body } = await request(app).get("/api/articles").expect(200);
     const articles = body.articles;
     expect(articles.length).not.toBe(0);
@@ -56,7 +56,7 @@ describe("/api/articles", () => {
   });
   test("GET 200: Array within the response object can be sorted by a specified key when that key is added to the url as a query", async () => {
     const { body } = await request(app)
-      .get("/api/articles?sort_by=article_id")
+      .get("/api/articles?query=sort_by=article_id")
       .expect(200);
     const articles = body.articles;
     expect(articles[0].article_id).toBe(13);
@@ -74,26 +74,26 @@ describe("/api/articles", () => {
       expect(typeof article.comment_count).toBe("number");
     });
   });
-  //test("GET 200: Array within the response object can be sorted in ascending or desending order when specified in the url query", async () => {
-  //  const { body } = await request(app)
-  //    .get("/api/articles?sortby=article_id")
-  //    .expect(200);
-  //  const articles = body.articles;
-  //  expect(articles[0].article_id).toBe(1);
-  //  expect(articles[12].article_id).toBe(13);
-  //  expect(articles.length).not.toBe(0);
-  //  articles.forEach((article) => {
-  //    expect(Object.keys(article).length).toBe(8);
-  //    expect(typeof article.article_id).toBe("number");
-  //    expect(typeof article.title).toBe("string");
-  //    expect(typeof article.topic).toBe("string");
-  //    expect(typeof article.author).toBe("string");
-  //    expect(typeof article.created_at).toBe("string");
-  //    expect(typeof article.votes).toBe("number");
-  //    expect(typeof article.article_img_url).toBe("string");
-  //    expect(typeof article.comment_count).toBe("number");
-  //  });
-  //});
+  test("GET 200: Array within the response object can be sorted in ascending or desending order when specified in the url query", async () => {
+    const { body } = await request(app)
+      .get("/api/articles?query=sortby=article_id+order=ASC")
+      .expect(200);
+    const articles = body.articles;
+    expect(articles[0].article_id).toBe(1);
+    expect(articles[12].article_id).toBe(13);
+    expect(articles.length).not.toBe(0);
+    articles.forEach((article) => {
+      expect(Object.keys(article).length).toBe(8);
+      expect(typeof article.article_id).toBe("number");
+      expect(typeof article.title).toBe("string");
+      expect(typeof article.topic).toBe("string");
+      expect(typeof article.author).toBe("string");
+      expect(typeof article.created_at).toBe("string");
+      expect(typeof article.votes).toBe("number");
+      expect(typeof article.article_img_url).toBe("string");
+      expect(typeof article.comment_count).toBe("number");
+    });
+  });
 });
 
 describe("/api/article/:article_id", () => {
