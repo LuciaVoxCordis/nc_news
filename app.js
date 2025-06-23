@@ -15,12 +15,15 @@ const {
   handleOtherErrors,
 } = require("./error-handling");
 const deleteComment = require("./controllers/comments-controllers");
+const cors = require("cors");
 
 const app = express();
 
 //app.use()
 
 //app.use(express.static("public"));
+
+app.use(cors());
 
 app.use(express.json());
 
