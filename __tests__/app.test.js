@@ -96,6 +96,20 @@ describe("/api/articles", () => {
   });
 });
 
+describe("/api/articles/topics/:topic", () => {
+  test("GET 200 Responds with an array of articles where the topic matches the specified topic within the url", async () => {
+    const { body } = await request(app)
+      .get("/api/articles/topics/mitch")
+      .expect(200);
+    const articles = body.articles;
+    console.log(articles);
+    expect(articles.length).toBe(12);
+    articles.forEach((article) => {
+      expect(article.topic).toBe("mitch");
+    });
+  });
+});
+
 describe("/api/article/:article_id", () => {
   test("GET 200: Responds with an object of a single specified article held within the articles table when queried with that articles user_id", async () => {
     const { body } = await request(app).get("/api/articles/3").expect(200);

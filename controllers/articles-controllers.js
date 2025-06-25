@@ -4,6 +4,7 @@ const {
   requestCommentsByArticleId,
   requestPostComment,
   requestPatchArticleVotes,
+  requestArticlesByTopic,
 } = require("../models/articles-models");
 const { extractQueries } = require("./controllers-utils");
 
@@ -24,6 +25,16 @@ const getArticleById = async (req, res, next) => {
     const { article_id } = req.params;
     const { rows } = await requestArticleById(article_id);
     res.status(200).send(rows[0]);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getArticlesByTopic = async (req, res, next) => {
+  try {
+    const { topic } = req.params;
+    const { rows } = await requestArticlesByTopic(topic);
+    res.status(200).send({ articles: rows });
   } catch (err) {
     next(err);
   }
@@ -64,6 +75,7 @@ const patchArticleVotes = async (req, res, next) => {
 module.exports = {
   getAllArticles,
   getArticleById,
+  getArticlesByTopic,
   getCommentsByArticleId,
   postComment,
   patchArticleVotes,

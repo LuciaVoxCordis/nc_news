@@ -48,6 +48,16 @@ const requestCommentsByArticleId = async (article_id) => {
   return { rows };
 };
 
+const requestArticlesByTopic = async (topic) => {
+  const { rows } = await db.query("SELECT * FROM articles WHERE topic = $1", [
+    topic,
+  ]);
+  if (!rows.length) {
+    return Promise.reject({ status: 404, msg: "not found" });
+  }
+  return { rows };
+};
+
 const requestPostComment = async (article_id, body, author) => {
   const { rows } = await db.query(
     "INSERT INTO comments (article_id, body, author) VALUES ($1, $2, $3) RETURNING *",
@@ -73,4 +83,5 @@ module.exports = {
   requestCommentsByArticleId,
   requestPostComment,
   requestPatchArticleVotes,
+  requestArticlesByTopic,
 };

@@ -8,6 +8,7 @@ const {
   getCommentsByArticleId,
   postComment,
   patchArticleVotes,
+  getArticlesByTopic,
 } = require("./controllers/articles-controllers");
 const {
   handlePostgresErrors,
@@ -36,6 +37,8 @@ app.get("/api/topics", getAllTopics);
 app.get("/api/articles", getAllArticles);
 
 app.get("/api/articles/:article_id", getArticleById);
+
+app.get("/api/articles/topics/:topic", getArticlesByTopic);
 
 app.patch("/api/articles/:article_id", patchArticleVotes);
 
