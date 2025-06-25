@@ -50,7 +50,7 @@ const requestCommentsByArticleId = async (article_id) => {
 
 const requestArticlesByTopic = async (topic) => {
   const { rows } = await db.query("SELECT * FROM articles WHERE topic = $1", [
-    topic,
+    topic
   ]);
   if (!rows.length) {
     return Promise.reject({ status: 404, msg: "not found" });
