@@ -260,9 +260,22 @@ describe("/api/users", () => {
 //~~~~~~~~~~~~~~~~~~~~COMMENTS TESTS~~~~~~~~~~~~~~~~~~~~
 
 describe("/api/comments/:comments_id", () => {
+  test("PATCH 202: Responds with an object representing a newly updated comment to the database, with comment_id matching the one specified and votes increased by the specified amount", async () => {
+    const { body } = await request(app)
+      .patch("/api/comments/5")
+      .send({ inc_votes: 50 })
+      .expect(202);
+    const comment = body;
+    console.log(comment);
+    expect(comment.comment_id).toBe(5);
+    expect(comment.votes).toBe(50);
+  });
+});
+
+describe("/api/comments/:comments_id", () => {
   test("DELETE 204: Responds with nothing and deletes the specified entry from the comments table", async () => {
-    await request(app).delete("/api/comments/3").expect(204);
-    const exists = await requestExists("comments", "comment_id", 3);
+    await request(app).delete("/api/comments/1").expect(204);
+    const exists = await requestExists("comments", "comment_id", 1);
     expect(exists).toBe(false);
   });
   test("DELETE 400: Responds with an object containing a key of 'msg' witha  value of 'bad request' when specified comment_id is not a valid number", async () => {

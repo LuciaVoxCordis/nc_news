@@ -15,7 +15,10 @@ const {
   handleCustomErrors,
   handleOtherErrors,
 } = require("./error-handling");
-const deleteComment = require("./controllers/comments-controllers");
+const {
+  deleteComment,
+  patchCommentVotes,
+} = require("./controllers/comments-controllers");
 const cors = require("cors");
 
 const app = express();
@@ -45,6 +48,8 @@ app.patch("/api/articles/:article_id", patchArticleVotes);
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 
 app.post("/api/articles/:article_id/comments", postComment);
+
+app.patch("/api/comments/:comment_id", patchCommentVotes);
 
 app.delete("/api/comments/:comment_id", deleteComment);
 
